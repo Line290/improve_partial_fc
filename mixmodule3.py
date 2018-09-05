@@ -278,7 +278,7 @@ def load_checkpoint(model, prefix, epoch):
             raise ValueError("Invalid param file " + fname)
     model.set_params(arg_params, aux_params, allow_missing=True)
     arg_params, aux_params = model.get_params()
-    print 'Load checkpoint from \"%s\"'%(param_name) 
+    logging.info('Load checkpoint from \"%s\"', param_name) 
     return model, arg_params, aux_params
 
 
@@ -325,7 +325,7 @@ class mixModule(object):
         if load_paramidx is not None:
 #             symbol, arg_params, aux_params = mx.model.load_checkpoint(param_prefix, load_paramidx)
             self.mod, arg_params, aux_params = load_checkpoint(self.mod, param_prefix, load_paramidx)
-            print 'fine-tuning...'
+            logging.info('fine-tuning...')
         
         self.context = context if isinstance(context, list) else [context]
         self.handle = handle
@@ -352,7 +352,7 @@ class mixModule(object):
         self.mod.symbol.save('%s-symbol.json' % prefix)
         param_name = '%s-%04d.params' % (prefix, epoch)        
         self.mod.save_params(param_name)
-        print 'Saved checkpoint to \"%s\"'%(param_name)
+        logging.info('Saved checkpoint to \"%s\"', param_name)
     
     def update(self, data_batch):
         self.mod.forward(data_batch)
@@ -467,7 +467,7 @@ class mixModule(object):
         # save proxy_Z(W) after a certain number of self.mod._optimizer.num_update
 #         if num_iter%1000 == 0:
         mx.nd.save(proxy_Z_fn, self.W)
-        print 'Save proxy_Z in "%s"' % (proxy_Z_fn)
+        logging.info('Save proxy_Z in \"%s\"', proxy_Z_fn)
     def get_loss(self):
         return self.loss
     
